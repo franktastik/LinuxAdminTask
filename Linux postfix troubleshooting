@@ -1,0 +1,32 @@
+Some users of the monitoring app have reported issues with xFusionCorp Industries mail server. They have a mail server in Stork DC where they are using postfix mail transfer agent. Postfix service seems to fail. Try to identify the root cause and fix it.
+
+
+# References https://ashraflinux.wordpress.com/useful-postfix-commands-to-troubleshooting-postfix-issue/ 
+
+To check posfix logs
+tail -f /var/log/maillog|grep postfix
+
+Some users of the monitoring app have reported issues with xFusionCorp Industries mail server. They have a mail server in Stork DC where they are using postfix mail transfer agent. Postfix service seems to fail. Try to identify the root cause and fix it.
+
+ssh 
+
+sudo su 
+
+check if postfix is installed
+
+check status and the error message. 
+Systemctl status <service name>
+
+view the full log using journal command 
+journalctl -xe -u postfix or use the  systemctl status postfix -l to display full info with log parameters. 
+
+cat /etc/postfix/main.cf | grep <error message/word>
+
+Go to the config file and search the error message using /<word> from the journal log 
+vi /etc/postfix/main.cf 
+
+After fixing the error message.Restart the postfix service using the systemctl restart postfix 
+
+5. validate the task by telnet the port 25 
+
+    telnet stmail01 25
