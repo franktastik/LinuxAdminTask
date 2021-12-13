@@ -1,0 +1,61 @@
+
+
+We have confidential data that needs to be transferred to a remote location, so we need to encrypt that data.We also need to decrypt data we received from a remote location in order to understand its content.
+On storage server in Stratos Datacenter we have private and public keys stored /home/*_key.asc. Use those keys to perform the following actions.
+
+Encrypt /home/encrypt_me.txt to /home/encrypted_me.asc.
+
+Decrypt /home/decrypt_me.asc to /home/decrypted_me.txt. (Passphrase for decryption and encryption is kodekloud).
+
+
+#Login to the storage server and switch to root user
+
+#cd into the home directory based on private and public keys stored /home/*_key.asc
+
+#List the files, keys and there permissions 
+    ll
+
+#Import gpg Private & Public key  while in the home directory
+
+    gpg --import public_key.asc
+    Syntax = gpg --import recipient-pubkey.asc 
+    gpg --import private_key.asc 
+
+#Verify keys are imported successfully
+    gpg --list-keys
+    gpg --list-secret-keys
+
+#Encrypt the file txt in to asc in same folder path. r = recipient.  --armor option tells gpg to create an ASCII file. Email was stored in the txt file.  Got the email address after running gpg --list-keys 
+    gpg --encrypt -r recipient_email --armour < from_textfile.txt -o to_a_new_filename.asc
+
+#Decrypt the file asc in to txt  using passphrase within same folder path 
+    Syntax = gpg --decrypt coded.asc > plain.txt
+
+   gpg --decrypt from_filename.asc > to_a_new_filename.txt 
+
+#Verify the encrpyted & decrypted files in /home
+
+    ll 
+
+#Validate the task by cat the files output
+
+    cat decrypted_filename.txt
+    cat decrypted_filename.asc
+    cat encrpyted_filename.txt
+    cat encrpyted_filename.asc
+
+
+#References
+https://www.howtogeek.com/427982/how-to-encrypt-and-decrypt-files-with-gpg-on-linux/
+https://www.redhat.com/sysadmin/encryption-decryption-gpg 
+https://mirrors.tripadvisor.com/centos-vault/3.1/docs/html/rhel-sbs-en-3/s1-gnupg-import.html
+https://www.gnupg.org/gph/en/manual/x108.html 
+
+
+#Notes
+GPG, or GnuPG, stands for GNU Privacy Guard. The GPG Project provides the tools and libraries to allows users to interface with a GUI or command line to integrate encryption with emails and operating systems like Linux.
+GPG includes the tools you need to use public-key encryption and digital signatures on your Linux system.
+
+#To encrypt a file and send it to Mary, use the command below. The file is created with the same name as the original, but with “.asc” appended to the file name. Let’s have a look inside it.
+    gpg --encrypt --sign --armor -r email_address filename.txt
+The --encrypt option tells gpg to encrypt the file, and the --sign option tells it to sign the file with your details. The --armor option tells gpg to create an ASCII file. The -r (recipient) option must be followed by the email address of the person you’re sending the file to.
