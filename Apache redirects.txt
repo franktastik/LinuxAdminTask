@@ -1,0 +1,71 @@
+The Nautilus devops team got some requirements related to some Apache config changes. They need to setup some redirects for some URLs. There might be some more changes need to be done. Below you can find more details regarding that:
+
+httpd is already installed on app server 1. Configure Apache to listen on port 8086.
+
+Configure Apache to add some redirects as mentioned below:
+
+a.) Redirect http://stapp01.stratos.xfusioncorp.com:<Port>/ to http://www.stapp01.stratos.xfusioncorp.com:<Port>/ i.e non www to www. This must be a permanent redirect i.e 301
+
+b.) Redirect http://www.stapp01.stratos.xfusioncorp.com:<Port>/blog/ to http://www.stapp01.stratos.xfusioncorp.com:<Port>/news/. This must be a temporary redirect i.e 302.
+
+#Login to server as root user 
+
+#Go to config file and add the Listen port number 
+
+    vi /etc/httpd/conf/httpd.conf
+
+#Search the file using /Listen and change the Listen port number 
+
+# Verify the port number is added
+    cat /etc/httpd/conf/httpd.conf | grep Listen
+
+# Create a main.conf file under the /etc/httpd/conf.d directory to redirect permanent and tempporary
+    vi /etc/httpd/conf.d/main.conf
+
+#Add the file. If you want to create a permanent redirect, add the line "Redirect 301 /oldlocation http://www.domain2.com/newlocation" where 301 represent the port number or using "Redirect permanent /oldlocation http://www.domain2.com/newlocation
+". on the old URL, dont add the port number and http. Same applies for the second configuration. Please observe the spacing.   
+
+Using the sample code, I was able to write the second code 
+
+<VirtualHost *:port_number>
+ServerName old_url
+Redirect 301 / new_url:port_number/
+</VirtualHost>
+
+<VirtualHost *:port_number>
+ServerName old_url
+Redirect 302 /newlocation new_url:port_number/
+</VirtualHost>
+
+--------------
+
+<VirtualHost *:8086>
+ServerName stapp03.stratos.xfusioncorp.com
+Redirect 301 / http://www.stapp03.stratos.xfusioncorp.com:8086/
+</VirtualHost>
+
+<VirtualHost *:3000>
+ServerName stapp03.stratos.xfusioncorp.com:8086/blog/
+Redirect 302 /blog http://www.stapp03.stratos.xfusioncorp.com:8086/news/ 
+</VirtualHost>
+
+#Verify 
+    cat /etc/httpd/conf.d/main.conf
+
+#Restart or Start the service
+
+    systemctl enable httpd
+    systemctl start httpd
+    systemctl status httpd
+
+# Check the status of the service. 
+
+#Validate the task 
+    curl <old url> 
+    curl <new url>
+
+
+
+#References
+https://www.digitalocean.com/community/tutorials/how-to-create-temporary-and-permanent-redirects-with-apache-and-nginx#:~:text=In%20Apache%2C%20you%20can%20accomplish,URL%20and%20the%20new%20URL.&text=By%20default%2C%20the%20%22Redirect%22,302%2C%20or%20temporary%2C%20redirect.
+
