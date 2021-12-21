@@ -1,0 +1,52 @@
+During a recent security audit, the application security team of xFusionCorp Industries found security issues with the Apache web server on the Nautilus App Server 1 server in Stratos DC. They have listed several security issues that need to be fixed on this server. Please apply the security settings below:
+
+a. On Nautilus App Server 1 it was identified that the Apache web server is exposing the version number. Ensure this server has the appropriate settings to hide the version number of the Apache web server.
+
+b. There is a website hosted under /var/www/html/blog on App Server 1. It was detected that the directory /blog lists all of its contents while browsing the URL. Disable the directory browser listing in Apache config.
+
+c. Also make sure to restart the Apache service after making the changes.
+
+
+SOLUTION
+
+#Login to the App server as a root user 
+
+
+#Start the httpd service
+    systemctl status httpd | grep 
+    systemctl -l status service-name 
+    systemctl start httpd
+
+    journal -xe 
+
+# Check the log 
+    journal -o verbose _PID=<Process number>
+    journalctl -u service-name
+    journalctl -u service-name.service 
+
+    journalctl -xefu service-name 
+    systemctl log named.service --since=today 
+    
+# Verify the server token, Server Signature and indexes
+    cat /etc/httpd/conf/httpd.conf | grep ServerTokens
+    cat /etc/httpd/conf/httpd.conf | grep ServerSignature 
+    cat /etc/httpd/conf/httpd.conf | grep indexes 
+
+
+#create .conf file in the directory /etc/httpd/conf/
+    vi /etc/httpd/conf/httpd.conf 
+Load config files in the "/etc/httpd/conf.d" directory, if any.
+
+#Add Server token, Server Signature and indexes under IncludeOptional conf.d/*.  Under the document root directory, change the Options indexes FollowSymLinks to Options FollowSymLinks
+    ServerTokens Prod
+    ServerSignature Off 
+
+#Start the httpd service 
+    systemctl start httpd
+    systemctl status httpd
+
+#Validate the task by using the curl http command 
+    curl -I http: // stapp01: 8080
+    curl -I http: // stapp01: 8080/media 
+
+
