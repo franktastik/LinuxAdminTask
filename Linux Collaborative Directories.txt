@@ -1,0 +1,46 @@
+
+The Nautilus team doesn't want its data to be accessed by any of the other groups / teams due to security reasons and want their data to be strictly accessed by the systemadmin group of the team.
+
+Setup a collaborative directory systemadmin/data on the Nautilus App 1 server in the Stratos Datacenter.
+
+The directory should be group owned by the group systemadmin and the group should own the files inside the directory. The directory should be read / write / execute to the group owners, and others should not have any access.
+
+
+STEPS 
+
+Login to the App server and make root 
+
+Create a directory 
+
+mkdir -p <directory path>
+
+Check the permission for the new directory created.  Get information about a directory. 
+
+ls -ld <directory path>
+
+Changes the user and group of the specified file or directory
+
+chown -R root:<group name> <directory path> 
+
+N.B: To undo the above command as a root user. Use chown mynewuser.mynewuser /home/mynewuser
+
+or Change the group of the directory from the root to the mentioned group in the task. chgrp = changing primary group for the directory. -R = recursive. changes will reflect all sub-directories and files
+
+chgrp -R <group name> <directory path> . as a root user. 
+
+Verify 
+
+ls -ld <directory path> 
+ll -lsd <directory path> . Displays directory info with the permission info 
+
+
+Change permission of the new directory
+
+chown chmod -R 2770 <directory path>
+
+
+
+References
+https://unix.stackexchange.com/questions/485379/what-is-chown-rootroot-doing#:~:text=The%20command%20chown%20root%3Aroot%20changes%20the%20user%20and%20group,user%20root%20and%20group%20root%20.
+
+https://superuser.com/questions/912695/chown-r-rootroot-in-root-performs-chown-on 
