@@ -1,0 +1,34 @@
+QUESTION:
+Nautilus production support team was trying to fix some issues with their storage server. 
+Storage server has a shared directory /nfsshare which is mounted on all app servers at location /var/www/html so that whatever data they store on storage server under /nfsshare can be shared among all app servers. 
+Now somehow NFS server is broken and having some issues.
+Identify the root cause of issue and fix the same to make sure sharing works fine among all app servers and storage server.
+
+
+
+SOLUTIONS:
+ssh into the server and change to root. 
+ssh username@ip or domain
+
+#Change config file
+  vi /etc/exports 
+
+#Check for service
+  rpcinfo -p and you will see if it is active or inactive
+
+#Start the Service
+  service nfs start  OR
+  systemctl start nfs.service OR
+  systemctl restart nfs
+
+#Check the service status
+  service rpcbind status
+
+Go to any of the app server and use #showmount -e <server ip>
+Then,  mount -t nfs 172.16.238.15:/nfsshare /mnt/nfsshare (shared file)
+Same will have to be done for other servers. 
+
+To check, you can create a file in the shared directory
+exportfs -ra ---- it shows what is mounted
+
+use mount | nfs grep to confirm the mount
