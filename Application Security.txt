@@ -1,0 +1,30 @@
+We have a backup management application UI hosted on Nautilus's backup server in Stratos DC. That backup management application code is deployed under Apache on the backup server itself, and Nginx is running as a reverse proxy on the same server. Apache and Nginx ports are 6300 and 8094, respectively. We have iptables firewall installed on this server. Make the appropriate changes to fulfill the requirements mentioned below:
+We want to open all incoming connections to Nginx's port and block all incoming connections to Apache's port. Also make sure rules are permanent.
+
+
+Solution
+
+#Check the telnet connection from the jump server using the two port number. Both port number will accpet connection
+    telnet ServerName port_number
+
+#Login to backup server and add these two rules
+    sudo iptables -A INPUT -p tcp --dport <port_number> -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+    sudo iptables -A INPUT -p tcp --dport <port_number> -m conntrack --ctstate NEW -j REJECT
+#ave it by typing following command
+    sudo iptables-save > /etc/sysconfig/iptables
+
+#Check if the rules are added or not
+    cat /etc/sysconfig/iptables
+#Check the telnet connection from the jump server using the two port number. Only one port will accept connection
+    telnet ServerName port_number
+
+
+
+#References
+https://www.digitalocean.com/community/tutorials/iptables-essentials-common-firewall-rules-and-commands 
+https://www.computerhope.com/unix/utelnet.htm 
+https://www.journaldev.com/28614/telnet-command-linux-unix
+https://titanwolf.org/Network/Articles/Article?AID=67b97866-0e24-4a89-a5af-a4171165047e 
+
+#Notes. 
+ The instructions is for Web servers only. Similar commands exist for mysql, ssh, mail (smtp, imaps, pop3) and other services
