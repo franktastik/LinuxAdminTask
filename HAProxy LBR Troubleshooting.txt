@@ -1,0 +1,18 @@
+QUESTION:
+
+xFusionCorp Industries has an application running on Nautlitus infrastructure in Stratos Datacenter. 
+The monitoring tool recognised that there is an issue with the haproxy service on LBR server. 
+That needs to fixed to make the application work properly. Troubleshoot and fix the issue, and make sure haproxy service is running on Nautilus LBR server.
+
+SOLUTION:
+
+HAProxy application is used to distribute the workload across multiple servers such as web server, 
+database server. This improves the overall performance and reliability of server environment.
+
+#"sudo haproxy -c -f /etc/haproxy/haproxy.cfg" --- Used to check for errors
+
+from the error, I realized that the service is not active, therefore, we need to start and enable the haproxy service
+
+  sudo systemctl start haproxy
+  sudo systemctl enable haproxy
+  sudo systemctl status haproxy
