@@ -1,0 +1,77 @@
+
+
+The system admins team of xFusionCorp Industries needs to deploy a new application on App Server 3 in a Stratos Datacenter. They have some pre-requites to get ready that server for application deployment. Prepare the server as per requirements shared below:
+
+Install and configure nginx on App Server 3.
+
+1. On App Server 3 there is a self signed SSL certificate and key present at location /tmp/nautilus.crt and /tmp/nautilus.key. Move them to some appropriate location and deploy the same in Nginx.
+
+2. Create an index.html file with content Welcome! under Nginx document root.
+
+3. For final testing try to access the App Server 3 link (either hostname or IP) from the jump host using the curl command. For example curl -Ik https: // <app-server-ip> /.
+  
+
+
+#Login to the server as Root. 
+
+#Check OS version 
+    cat /etc/os-release or 
+    
+
+#While Nginx is not available in CentOS’s default repositories, it is present in the EPEL (extra packages for Enterprise Linux) repository. We can enable the EPEL repository to give our server access to the Nginx package by typing
+    sudo yum install epel-release
+
+#install Nginx by typing
+    sudo yum install nginx
+
+
+    ll /tmp
+
+
+#Edit Nginx conf &  do the changes as below.  Note Server_name IP should be the as per your app server mentioned in the task 
+    vi /etc/nginx/nginx.conf
+    cat /etc/nginx/nginx.conf
+
+#Once the configuration is saved then copy the certificates and key
+    cp /tmp/nautilus.crt /etc/pki/CA/certs/
+    cp /tmp/nautilus.key /etc/pki/CA/private/
+
+    ll /etc/pki/CA/certs
+
+
+    cat /etc/nginx/nginx.conf | grep root 
+
+
+#Create an index.html  with the word Welcome! is Nginx document root. rm old index.html. Create a new one using vi command. 
+    ll /usr/share/nginx/html/
+    rm /usr/share/nginx/html/index.html
+    vi /usr/share/nginx/html/index.html
+
+#Verify 
+    cat /usr/share/nginx/html/index.html
+
+#Start the Nginx service by typing:
+    sudo systemctl start nginx
+
+#Check that the service is up and running by typing:
+    systemctl status nginx
+
+#You will also want to enable Nginx, so it starts when your server boots:
+    sudo systemctl enable nginx
+
+# Validate the task from the  JUMP server  
+    curl -Ik https: // stapp03 
+
+References
+https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-on-centos-7
+
+
+#save the file and restart the Service
+sudo cp /tmp/nautilus.crt /etc/pki/CA/certs 
+sudo cp /tmp/nautilus.key  /etc/pki/CA/private
+sudo systemctl restart nginx 
+sudo systemctl enable nginx
+sudo echo  Welcome!>>index.html
+sudo mv index.html /usr/share/nginx/html
+sudo yum install curl -y
+curl -Ik https://172.16.238.10  ## use ip of app server
