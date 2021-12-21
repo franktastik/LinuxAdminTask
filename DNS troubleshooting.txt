@@ -1,0 +1,20 @@
+Question: System Admins team has noticed some DNS resolution on App server 2. So we want to add some additional DNS nameservers on server.
+
+
+Solution
+
+Login to App Server 2 by:  
+ssh steve@172.16.238.11
+
+Your App server can be different. Check it from your question.
+
+
+Edit the resolv.conf file in vim editor
+sudo vi /etc/resolv.conf
+
+Add the following nameservers 
+
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+
+Save it and quit from vim by pressing ESC and then Shift+ZZ on keyboard . See this screenshot below of resolv.conf file to understand the format
