@@ -1,0 +1,18 @@
+
+Disable the root login in all appservers
+
+Login to the App servers using ssh as a root user 
+
+Edit the ssh config file by uncommenting the "PermitRootLogin" and replace yet with no
+
+    vi /etc/ssh/sshd_config 
+
+restart the sshd service
+
+
+systemctl restart sshd && systemctl status sshd 
+
+
+References
+https://www.tecmint.com/disable-root-login-in-linux/
+https://serverfault.com/questions/178080/how-do-i-disable-root-login-in-ubuntu 
